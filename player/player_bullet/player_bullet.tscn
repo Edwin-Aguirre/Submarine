@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3 uid="uid://cx8vo7ddv5ax"]
+
+[ext_resource type="Texture2D" uid="uid://d15h20l5ng2uc" path="res://player/player_bullet/player_bullet.png" id="1_bflbm"]
+[ext_resource type="Script" uid="uid://bdp1810qeqi0o" path="res://player/player_bullet/player_bullet.gd" id="2_it4l8"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_it4l8"]
+atlas = ExtResource("1_bflbm")
+region = Rect2(0, 0, 18, 13)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wty2e"]
+atlas = ExtResource("1_bflbm")
+region = Rect2(18, 0, 18, 13)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_3paff"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_it4l8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wty2e")
+}],
+"loop": false,
+"name": &"default",
+"speed": 20.0
+}]
+
+[node name="PlayerBullet" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_3paff")
+autoplay = "default"
+offset = Vector2(-0.5, 0)
+script = ExtResource("2_it4l8")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(0, 1.19209e-07)
+scale = Vector2(0.7, 0.7)
+
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]
