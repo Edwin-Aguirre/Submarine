@@ -1,4 +1,4 @@
-extends AnimatedSprite2D
+extends Area2D
 
 
 const SPEED: Vector2 = Vector2(125, 90)
@@ -11,6 +11,7 @@ var can_shoot: bool = true
 
 
 @onready var reload_timer: Timer = $ReloadTimer
+@onready var player_sprite: AnimatedSprite2D = $PlayerSprite
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -21,16 +22,16 @@ func _process(delta: float) -> void:
 	velocity = velocity.normalized()
 	
 	if velocity.x > 0:
-		flip_h = false
+		player_sprite.flip_h = false
 	elif velocity.x < 0:
-		flip_h = true
+		player_sprite.flip_h = true
 	
 	
 	if Input.is_action_pressed("shoot") and can_shoot:
 		var bullet_instance = BULLET.instantiate()
 		get_tree().current_scene.add_child(bullet_instance)
 		
-		if flip_h :
+		if player_sprite.flip_h :
 			bullet_instance.flip_bullet_direction()
 			bullet_instance.global_position = global_position - Vector2(BULLET_OFFSET, 0)
 		else:

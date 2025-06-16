@@ -16,6 +16,11 @@ run/main_scene="uid://d33sndw4dq6ub"
 config/features=PackedStringArray("4.4", "Mobile")
 config/icon="uid://7efdcwq1371y"
 
+[autoload]
+
+Global="*res://globals/global.gd"
+GameEvent="*res://globals/game_event.gd"
+
 [display]
 
 window/size/viewport_width=256
