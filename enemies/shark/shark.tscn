@@ -1,0 +1,62 @@
+[gd_scene load_steps=9 format=3 uid="uid://iw75wmpel60f"]
+
+[ext_resource type="Texture2D" uid="uid://ctnxelcbrciru" path="res://enemies/shark/shark.png" id="1_24shi"]
+[ext_resource type="Script" uid="uid://8npilptkrjd8" path="res://enemies/shark/shark.gd" id="2_kbu7w"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kbu7w"]
+atlas = ExtResource("1_24shi")
+region = Rect2(0, 0, 22, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bdosu"]
+atlas = ExtResource("1_24shi")
+region = Rect2(22, 0, 22, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tftwl"]
+atlas = ExtResource("1_24shi")
+region = Rect2(44, 0, 22, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cowuq"]
+atlas = ExtResource("1_24shi")
+region = Rect2(66, 0, 22, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_4gyon"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kbu7w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bdosu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tftwl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cowuq")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kbu7w"]
+size = Vector2(18, 9)
+
+[node name="Shark" type="Area2D"]
+script = ExtResource("2_kbu7w")
+
+[node name="SharkSprite" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_4gyon")
+autoplay = "default"
+frame_progress = 0.65056
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_kbu7w")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(-8.9407e-08, -0.5)
+scale = Vector2(0.9, 0.45)
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://cx8vo7ddv5ax"]
+[gd_scene load_steps=7 format=3 uid="uid://cx8vo7ddv5ax"]
 
 [ext_resource type="Texture2D" uid="uid://d15h20l5ng2uc" path="res://player/player_bullet/player_bullet.png" id="1_bflbm"]
 [ext_resource type="Script" uid="uid://bdp1810qeqi0o" path="res://player/player_bullet/player_bullet.gd" id="2_it4l8"]
@@ -25,11 +25,21 @@ animations = [{
 "speed": 20.0
 }]
 
-[node name="PlayerBullet" type="AnimatedSprite2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_it4l8"]
+size = Vector2(14, 8)
+
+[node name="PlayerBullet" type="Area2D" groups=["PlayerBullet"]]
+script = ExtResource("2_it4l8")
+
+[node name="PlayerBulletSprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_3paff")
 autoplay = "default"
+frame = 1
+frame_progress = 1.0
 offset = Vector2(-0.5, 0)
-script = ExtResource("2_it4l8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_it4l8")
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
 position = Vector2(0, 1.19209e-07)

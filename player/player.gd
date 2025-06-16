@@ -6,7 +6,7 @@ const BULLET_OFFSET: int = 7
 const BULLET = preload("res://player/player_bullet/player_bullet.tscn")
 
 
-var velocity: Vector2 = Vector2(0,0)
+var velocity: Vector2 = Vector2.ZERO
 var can_shoot: bool = true
 
 

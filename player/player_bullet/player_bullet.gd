@@ -1,10 +1,13 @@
-extends AnimatedSprite2D
+extends Area2D
 
 
 const SPEED = 300
 
 
-var velocity: Vector2 = Vector2(1,0)
+var velocity: Vector2 = Vector2.RIGHT
+
+
+@onready var player_bullet_sprite: AnimatedSprite2D = $PlayerBulletSprite
 
 
 func _ready() -> void:
@@ -19,7 +22,7 @@ func _physics_process(delta: float) -> void:
 
 func flip_bullet_direction() -> void:
 	velocity = -velocity
-	flip_h = !flip_h
+	player_bullet_sprite.flip_h = !player_bullet_sprite.flip_h
 
 
 func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
