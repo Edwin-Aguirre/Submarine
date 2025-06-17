@@ -15,3 +15,5 @@ func _ready() -> void:
 func _update() -> void:
 	if Global.saved_people_count >= order_number:
 		texture = PERSON_UI
+	else:
+		texture = PERSON_EMPTY_UI

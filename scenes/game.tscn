@@ -1,8 +1,54 @@
-[gd_scene load_steps=4 format=3 uid="uid://d33sndw4dq6ub"]
+[gd_scene load_steps=18 format=3 uid="uid://d33sndw4dq6ub"]
 
 [ext_resource type="PackedScene" uid="uid://dwsnh074k44bs" path="res://player/player.tscn" id="1_uwrxv"]
 [ext_resource type="PackedScene" uid="uid://byeph3xkhhcwr" path="res://user_interface/people-count/people_count.tscn" id="3_lbhrr"]
 [ext_resource type="PackedScene" uid="uid://8t6i7awptmbl" path="res://enemies/enemy_spawner/enemy_spawner.tscn" id="3_lnu2h"]
+[ext_resource type="Script" uid="uid://cg2otghq3604m" path="res://scenes/game/oxygen_zone.gd" id="3_u5sy4"]
+[ext_resource type="Shader" uid="uid://e55ttlrkdkk0" path="res://scenes/environment/water.gdshader" id="4_gee14"]
+[ext_resource type="Texture2D" uid="uid://5yo1uvp1nlw1" path="res://user_interface/oxygen-bar/oxygen_bar_under.png" id="4_p57ef"]
+[ext_resource type="Texture2D" uid="uid://10bvo2c0qvjd" path="res://user_interface/oxygen-bar/oxygen_bar_progress.png" id="5_u5sy4"]
+[ext_resource type="Script" uid="uid://blvg7tkdfpxmr" path="res://user_interface/oxygen-bar/oxygen_bar.gd" id="6_gee14"]
+[ext_resource type="FontFile" uid="uid://btonjd5feedgb" path="res://user_interface/fonts/font_1.ttf" id="9_0tnpc"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p57ef"]
+size = Vector2(256, 20)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0tnpc"]
+shader = ExtResource("4_gee14")
+shader_parameter/strength = Vector2(2, 2)
+shader_parameter/speed = 1.0
+shader_parameter/seed = 0.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_vtaks"]
+size = Vector2(400, 4)
+subdivide_width = 8
+subdivide_depth = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_gee14"]
+size = Vector2(400, 35)
+subdivide_width = 8
+subdivide_depth = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_0tnpc"]
+size = Vector2(400, 40)
+subdivide_width = 8
+subdivide_depth = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_kvpfn"]
+size = Vector2(400, 75)
+subdivide_width = 8
+subdivide_depth = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_dinhu"]
+size = Vector2(400, 75)
+subdivide_width = 8
+subdivide_depth = 1
+
+[sub_resource type="LabelSettings" id="LabelSettings_vtaks"]
+font = ExtResource("9_0tnpc")
+font_size = 8
+outline_size = 5
+outline_color = Color(0.12549, 0.0823529, 0.2, 1)
 
 [node name="Game" type="Node"]
 
@@ -10,9 +56,94 @@
 position = Vector2(128, 72)
 
 [node name="EnemySpawner" parent="." instance=ExtResource("3_lnu2h")]
-position = Vector2(0, -50)
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="OxygenZone" type="Area2D" parent="."]
+script = ExtResource("3_u5sy4")
 
-[node name="PeopleCount" parent="CanvasLayer" instance=ExtResource("3_lbhrr")]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OxygenZone"]
+position = Vector2(128, 43)
+shape = SubResource("RectangleShape2D_p57ef")
+
+[node name="Environment" type="Node2D" parent="."]
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Environment"]
+material = SubResource("ShaderMaterial_0tnpc")
+position = Vector2(127, 39)
+scale = Vector2(0.7, 1)
+mesh = SubResource("QuadMesh_vtaks")
+
+[node name="MeshInstance2D2" type="MeshInstance2D" parent="Environment"]
+modulate = Color(0.0470588, 0.901961, 0.94902, 1)
+z_index = -10
+material = SubResource("ShaderMaterial_0tnpc")
+position = Vector2(127, 55)
+scale = Vector2(0.7, 1)
+mesh = SubResource("QuadMesh_gee14")
+
+[node name="MeshInstance2D3" type="MeshInstance2D" parent="Environment"]
+modulate = Color(0, 0.596078, 0.858824, 1)
+z_index = -10
+material = SubResource("ShaderMaterial_0tnpc")
+position = Vector2(127, 65)
+scale = Vector2(0.7, 1)
+mesh = SubResource("QuadMesh_0tnpc")
+
+[node name="MeshInstance2D4" type="MeshInstance2D" parent="Environment"]
+modulate = Color(0.117647, 0.341176, 0.611765, 1)
+z_index = -12
+material = SubResource("ShaderMaterial_0tnpc")
+position = Vector2(127, 107)
+scale = Vector2(0.7, 1)
+mesh = SubResource("QuadMesh_kvpfn")
+
+[node name="MeshInstance2D5" type="MeshInstance2D" parent="Environment"]
+modulate = Color(0.12549, 0.207843, 0.384314, 1)
+z_index = -13
+material = SubResource("ShaderMaterial_0tnpc")
+position = Vector2(127, 178)
+scale = Vector2(0.7, 1)
+mesh = SubResource("QuadMesh_dinhu")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="PeopleCount" parent="UI" instance=ExtResource("3_lbhrr")]
 position = Vector2(8, 9)
+
+[node name="OxygenBar" type="TextureProgressBar" parent="UI"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_top = -19.0
+offset_right = 50.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+nine_patch_stretch = true
+stretch_margin_left = 4
+stretch_margin_right = 4
+texture_under = ExtResource("4_p57ef")
+texture_progress = ExtResource("5_u5sy4")
+script = ExtResource("6_gee14")
+
+[node name="Label" type="Label" parent="UI/OxygenBar"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -29.5
+offset_top = -11.5
+offset_right = 29.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Oxygen"
+label_settings = SubResource("LabelSettings_vtaks")
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[connection signal="area_entered" from="OxygenZone" to="OxygenZone" method="_on_area_entered"]
