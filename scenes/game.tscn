@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://d33sndw4dq6ub"]
+[gd_scene load_steps=25 format=3 uid="uid://d33sndw4dq6ub"]
 
 [ext_resource type="PackedScene" uid="uid://dwsnh074k44bs" path="res://player/player.tscn" id="1_uwrxv"]
 [ext_resource type="PackedScene" uid="uid://byeph3xkhhcwr" path="res://user_interface/people-count/people_count.tscn" id="3_lbhrr"]
@@ -9,6 +9,10 @@
 [ext_resource type="Texture2D" uid="uid://10bvo2c0qvjd" path="res://user_interface/oxygen-bar/oxygen_bar_progress.png" id="5_u5sy4"]
 [ext_resource type="Script" uid="uid://blvg7tkdfpxmr" path="res://user_interface/oxygen-bar/oxygen_bar.gd" id="6_gee14"]
 [ext_resource type="FontFile" uid="uid://btonjd5feedgb" path="res://user_interface/fonts/font_1.ttf" id="9_0tnpc"]
+[ext_resource type="FontFile" uid="uid://bdgq47w5reo0u" path="res://user_interface/fonts/font_2.ttf" id="10_kvpfn"]
+[ext_resource type="Script" uid="uid://brxklm7es5odr" path="res://scenes/game/camera.gd" id="10_vtaks"]
+[ext_resource type="Script" uid="uid://r5v50p2detp8" path="res://user_interface/points_display/points_display.gd" id="11_dinhu"]
+[ext_resource type="Script" uid="uid://bvnul0aicvkur" path="res://user_interface/game_over/game_over.gd" id="12_kvuet"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_p57ef"]
 size = Vector2(256, 20)
@@ -45,6 +49,23 @@ subdivide_width = 8
 subdivide_depth = 1
 
 [sub_resource type="LabelSettings" id="LabelSettings_vtaks"]
+font = ExtResource("9_0tnpc")
+font_size = 8
+outline_size = 5
+outline_color = Color(0.12549, 0.0823529, 0.2, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_dinhu"]
+font = ExtResource("10_kvpfn")
+font_size = 10
+outline_size = 5
+outline_color = Color(0.12549, 0.0823529, 0.2, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_kvuet"]
+font = ExtResource("9_0tnpc")
+outline_size = 5
+outline_color = Color(0.12549, 0.0823529, 0.2, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_trtic"]
 font = ExtResource("9_0tnpc")
 font_size = 8
 outline_size = 5
@@ -146,4 +167,87 @@ label_settings = SubResource("LabelSettings_vtaks")
 horizontal_alignment = 1
 vertical_alignment = 2
 
+[node name="PointsDisplay" type="Label" parent="UI"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 20.0
+grow_horizontal = 2
+text = "0"
+label_settings = SubResource("LabelSettings_dinhu")
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("11_dinhu")
+
+[node name="GameOver" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("12_kvuet")
+
+[node name="ColorRect" type="ColorRect" parent="UI/GameOver"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.145098, 0.141176, 0.266667, 0.941176)
+
+[node name="GameOverLabel" type="Label" parent="UI/GameOver"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -22.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Game Over!"
+label_settings = SubResource("LabelSettings_kvuet")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CurrentScoreLabel" type="Label" parent="UI/GameOver"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = 8.0
+offset_bottom = 31.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Score 100"
+label_settings = SubResource("LabelSettings_trtic")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HighScoreLabel" type="Label" parent="UI/GameOver"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = 28.0
+offset_bottom = 51.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "HighScore 100"
+label_settings = SubResource("LabelSettings_trtic")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GameOverDelay" type="Timer" parent="UI/GameOver"]
+wait_time = 0.5
+one_shot = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(128, 72)
+script = ExtResource("10_vtaks")
+
 [connection signal="area_entered" from="OxygenZone" to="OxygenZone" method="_on_area_entered"]
+[connection signal="timeout" from="UI/GameOver/GameOverDelay" to="UI/GameOver" method="_on_game_over_delay_timeout"]

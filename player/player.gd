@@ -30,6 +30,7 @@ var state: String = "default"
 func _ready() -> void:
 	GameEvent.full_crew_oxygen_refuel.connect(full_crew_oxygen_refuel)
 	GameEvent.less_people_oxygen_refuel.connect(less_people_oxygen_refuel)
+	GameEvent.game_over.connect(game_over)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -40,11 +41,14 @@ func _process(delta: float) -> void:
 		clamp_player_position()
 		shooting()
 		lose_oxygen(delta)
+		death_oxygen_empty()
 	elif state == "oxygen_refuel":
 		oxygen_refuel(delta)
 		move_to_shore_line(delta)
 	elif state == "people_refuel":
 		move_to_shore_line(delta)
+	
+	GameEvent.emit_camera_follow_player(global_position.y)
 
 
 func movement(delta: float) -> void:
@@ -99,20 +103,36 @@ func oxygen_refuel(delta: float) -> void:
 		state = "default"
 
 
+func death_oxygen_empty() -> void:
+	if Global.oxygen_level <= 0:
+		GameEvent.emit_game_over()
+
+
+func death_oxygen_full_refuel() -> void:
+	if Global.oxygen_level > 80:
+		GameEvent.emit_game_over()
+
+
 func full_crew_oxygen_refuel() -> void:
 	state = "people_refuel"
 	decrease_people_timer.start()
+	death_oxygen_full_refuel()
 
 
 func less_people_oxygen_refuel() -> void:
 	state = "oxygen_refuel"
 	remove_person()
+	death_oxygen_full_refuel()
 
 
 func remove_person():
 	if Global.saved_people_count > 0:
 		Global.saved_people_count -= 1
 		GameEvent.emit_update_collected_people_count()
+
+
+func game_over() -> void:
+	queue_free()
 
 
 func _on_reload_timer_timeout() -> void:
