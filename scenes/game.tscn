@@ -130,26 +130,29 @@ mesh = SubResource("QuadMesh_dinhu")
 [node name="PeopleCount" parent="UI" instance=ExtResource("3_lbhrr")]
 position = Vector2(8, 9)
 
-[node name="OxygenBar" type="TextureProgressBar" parent="UI"]
-anchors_preset = 7
+[node name="OxygenBar" type="Node2D" parent="UI"]
+position = Vector2(128, 128)
+script = ExtResource("6_gee14")
+
+[node name="OxygenBarTexture" type="TextureProgressBar" parent="UI/OxygenBar"]
+anchors_preset = 8
 anchor_left = 0.5
-anchor_top = 1.0
+anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 1.0
+anchor_bottom = 0.5
 offset_left = -50.0
-offset_top = -19.0
+offset_top = -4.5
 offset_right = 50.0
-offset_bottom = -10.0
+offset_bottom = 4.5
 grow_horizontal = 2
-grow_vertical = 0
+grow_vertical = 2
 nine_patch_stretch = true
 stretch_margin_left = 4
 stretch_margin_right = 4
 texture_under = ExtResource("4_p57ef")
 texture_progress = ExtResource("5_u5sy4")
-script = ExtResource("6_gee14")
 
-[node name="Label" type="Label" parent="UI/OxygenBar"]
+[node name="Label" type="Label" parent="UI/OxygenBar/OxygenBarTexture"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -167,6 +170,10 @@ label_settings = SubResource("LabelSettings_vtaks")
 horizontal_alignment = 1
 vertical_alignment = 2
 
+[node name="FlashTimer" type="Timer" parent="UI/OxygenBar"]
+wait_time = 0.1
+one_shot = true
+
 [node name="PointsDisplay" type="Label" parent="UI"]
 anchors_preset = 10
 anchor_right = 1.0
@@ -179,6 +186,7 @@ vertical_alignment = 1
 script = ExtResource("11_dinhu")
 
 [node name="GameOver" type="Control" parent="UI"]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -250,4 +258,5 @@ position = Vector2(128, 72)
 script = ExtResource("10_vtaks")
 
 [connection signal="area_entered" from="OxygenZone" to="OxygenZone" method="_on_area_entered"]
+[connection signal="timeout" from="UI/OxygenBar/FlashTimer" to="UI/OxygenBar" method="_on_flash_timer_timeout"]
 [connection signal="timeout" from="UI/GameOver/GameOverDelay" to="UI/GameOver" method="_on_game_over_delay_timeout"]

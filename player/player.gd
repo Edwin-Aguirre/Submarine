@@ -15,11 +15,17 @@ const MIN_Y_POSITION: int = OXYGEN_REFUEL_Y_POSITION
 
 const BULLET_OFFSET: int = 7
 const BULLET = preload("res://player/player_bullet/player_bullet.tscn")
+const PLAYER_SHOOT = preload("res://player/player_bullet/player_shoot.ogg")
+const PLAYER_DEATH = preload("res://player/player_death.ogg")
+const FULL_OXYGEN_ALERT = preload("res://user_interface/oxygen-bar/full_oxygen_alert.ogg")
 
 
 var velocity: Vector2 = Vector2.ZERO
 var can_shoot: bool = true
-var state: String = "default"
+var state = states.DEFAULT
+
+
+enum states {DEFAULT, PAUSED, OXYGEN_REFUEL, PEOPLE_REFUEL}
 
 
 @onready var reload_timer: Timer = $ReloadTimer
@@ -35,17 +41,17 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if state == "default":
+	if state == states.DEFAULT:
 		movement(delta)
 		flip_player_direction()
 		clamp_player_position()
 		shooting()
 		lose_oxygen(delta)
 		death_oxygen_empty()
-	elif state == "oxygen_refuel":
+	elif state == states.OXYGEN_REFUEL:
 		oxygen_refuel(delta)
 		move_to_shore_line(delta)
-	elif state == "people_refuel":
+	elif state == states.PEOPLE_REFUEL:
 		move_to_shore_line(delta)
 	
 	GameEvent.emit_camera_follow_player(global_position.y)
@@ -76,6 +82,8 @@ func shooting() -> void:
 		var bullet_instance = BULLET.instantiate()
 		get_tree().current_scene.add_child(bullet_instance)
 		
+		SoundManager.play_sound(PLAYER_SHOOT)
+		
 		if player_sprite.flip_h :
 			bullet_instance.flip_bullet_direction()
 			bullet_instance.global_position = global_position - Vector2(BULLET_OFFSET, 0)
@@ -100,35 +108,48 @@ func oxygen_refuel(delta: float) -> void:
 	Global.oxygen_level += OXYGEN_INCREASE_SPEED * delta
 	
 	if Global.oxygen_level > 99:
-		state = "default"
+		state = states.DEFAULT
+		player_sprite.play("default")
+		GameEvent.emit_pause_enemies(false)
+		SoundManager.play_sound(FULL_OXYGEN_ALERT)
 
 
 func death_oxygen_empty() -> void:
 	if Global.oxygen_level <= 0:
-		GameEvent.emit_game_over()
+		death()
 
 
 func death_oxygen_full_refuel() -> void:
 	if Global.oxygen_level > 80:
-		GameEvent.emit_game_over()
+		death()
 
 
 func full_crew_oxygen_refuel() -> void:
-	state = "people_refuel"
+	state = states.PEOPLE_REFUEL
+	player_sprite.play("flash")
 	decrease_people_timer.start()
 	death_oxygen_full_refuel()
+	GameEvent.emit_pause_enemies(true)
 
 
 func less_people_oxygen_refuel() -> void:
-	state = "oxygen_refuel"
+	state = states.OXYGEN_REFUEL
+	player_sprite.play("flash")
 	remove_person()
 	death_oxygen_full_refuel()
+	GameEvent.emit_pause_enemies(true)
 
 
 func remove_person():
 	if Global.saved_people_count > 0:
 		Global.saved_people_count -= 1
 		GameEvent.emit_update_collected_people_count()
+
+
+func death() -> void:
+	GameEvent.emit_game_over()
+	GameEvent.emit_pause_enemies(true)
+	SoundManager.play_sound(PLAYER_DEATH)
 
 
 func game_over() -> void:
@@ -143,5 +164,5 @@ func _on_decrease_people_timer_timeout() -> void:
 	remove_person()
 	
 	if Global.saved_people_count <= 0:
-		state = "oxygen_refuel"
+		state = states.OXYGEN_REFUEL
 		decrease_people_timer.stop()

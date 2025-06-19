@@ -6,7 +6,9 @@ signal update_points
 signal full_crew_oxygen_refuel
 signal less_people_oxygen_refuel
 signal game_over
+
 signal camera_follow_player(y_position: float)
+signal pause_enemies(pause: bool)
 
 
 func emit_update_collected_people_count() -> void:
@@ -31,3 +33,7 @@ func emit_game_over() -> void:
 
 func emit_camera_follow_player(y_position: float) -> void:
 	camera_follow_player.emit(y_position)
+
+
+func emit_pause_enemies(pause: bool) -> void:
+	pause_enemies.emit(pause)

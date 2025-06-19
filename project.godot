@@ -20,6 +20,7 @@ config/icon="uid://7efdcwq1371y"
 
 Global="*res://globals/global.gd"
 GameEvent="*res://globals/game_event.gd"
+SoundManager="*res://globals/sound_manager/sound_manager.gd"
 
 [display]
 

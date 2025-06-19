@@ -9,6 +9,21 @@ var used_spawn_points: Array = []
 
 @onready var left: Node = $Left
 @onready var right: Node = $Right
+@onready var spawn_enemy_timer: Timer = $SpawnEnemyTimer
+@onready var spawn_person_timer: Timer = $SpawnPersonTimer
+
+
+func _ready() -> void:
+	GameEvent.pause_enemies.connect(paused)
+
+
+func paused(pause) -> void:
+	if pause:
+		spawn_enemy_timer.stop()
+		spawn_person_timer.stop()
+	elif pause == false:
+		spawn_enemy_timer.start()
+		spawn_person_timer.start()
 
 
 func _on_spawn_enemy_timer_timeout() -> void:
