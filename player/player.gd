@@ -2,6 +2,7 @@ extends Area2D
 
 
 const SPEED: Vector2 = Vector2(125, 90)
+const ROTATION_STRENGTH: int = 15
 
 const OXYGEN_DECREASE_SPEED: float = 2.5
 const OXYGEN_INCREASE_SPEED: float = 60.0
@@ -19,9 +20,13 @@ const PLAYER_SHOOT = preload("res://player/player_bullet/player_shoot.ogg")
 const PLAYER_DEATH = preload("res://player/player_death.ogg")
 const FULL_OXYGEN_ALERT = preload("res://user_interface/oxygen-bar/full_oxygen_alert.ogg")
 
+const PIECE_COUNT: int = 10
+const OBJECT_PIECE = preload("res://particles/object_piece/object_piece.tscn")
+const PLAYER_PIECES = preload("res://player/player_pieces.png")
 
 var velocity: Vector2 = Vector2.ZERO
 var can_shoot: bool = true
+var is_shooting: bool = false
 var state = states.DEFAULT
 
 
@@ -43,6 +48,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if state == states.DEFAULT:
 		movement(delta)
+		rotate_movement(delta)
 		flip_player_direction()
 		clamp_player_position()
 		shooting()
@@ -66,10 +72,27 @@ func movement(delta: float) -> void:
 
 
 func flip_player_direction() -> void:
+	if is_shooting == true:
+		return
+	
 	if velocity.x > 0:
 		player_sprite.flip_h = false
 	elif velocity.x < 0:
 		player_sprite.flip_h = true
+
+
+func rotate_movement(delta: float) -> void:
+	var rotation_target = 0
+	
+	if velocity.y == 0:
+		rotation_target = velocity.x * ROTATION_STRENGTH
+	else:
+		if player_sprite.flip_h == false:
+			rotation_target = velocity.y * ROTATION_STRENGTH
+		else:
+			rotation_target = -velocity.y * ROTATION_STRENGTH
+	
+	rotation_degrees = lerp(rotation_degrees, rotation_target, 15 * delta)
 
 
 func clamp_player_position() -> void:
@@ -92,6 +115,11 @@ func shooting() -> void:
 		
 		reload_timer.start()
 		can_shoot = false
+	
+	if Input.is_action_pressed("shoot"):
+		is_shooting = true
+	else:
+		is_shooting = false
 
 
 func move_to_shore_line(delta: float) -> void:
@@ -130,6 +158,7 @@ func full_crew_oxygen_refuel() -> void:
 	decrease_people_timer.start()
 	death_oxygen_full_refuel()
 	GameEvent.emit_pause_enemies(true)
+	GameEvent.emit_kill_all_enemies()
 
 
 func less_people_oxygen_refuel() -> void:
@@ -150,6 +179,19 @@ func death() -> void:
 	GameEvent.emit_game_over()
 	GameEvent.emit_pause_enemies(true)
 	SoundManager.play_sound(PLAYER_DEATH)
+	player_death_pieces()
+
+
+func player_death_pieces() -> void:
+	for i in range(PIECE_COUNT):
+		var player_pieces_instance = OBJECT_PIECE.instantiate()
+		
+		player_pieces_instance.texture = PLAYER_PIECES
+		player_pieces_instance.hframes = PIECE_COUNT
+		player_pieces_instance.frame = i
+		
+		get_tree().current_scene.add_child(player_pieces_instance)
+		player_pieces_instance.global_position = global_position
 
 
 func game_over() -> void:

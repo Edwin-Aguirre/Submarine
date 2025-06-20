@@ -4,6 +4,7 @@ extends Area2D
 const SPEED: int = 25
 const SAVING_PERSON = preload("res://person/saving_person.ogg")
 const PERSON_DEATH = preload("res://person/person_death.ogg")
+const POINT_VALUE_POPUP = preload("res://user_interface/points_value_popup/point_value_popup.tscn")
 
 
 var velocity: Vector2 = Vector2.RIGHT
@@ -43,13 +44,22 @@ func paused(pause: bool) -> void:
 		current_state = states.DEFAULT
 
 
+func point_popup() -> void:
+	var point_value_popup_instance = POINT_VALUE_POPUP.instantiate()
+	
+	point_value_popup_instance.value = points_value
+	get_tree().current_scene.add_child(point_value_popup_instance)
+	point_value_popup_instance.global_position = global_position
+
+
 func _on_area_entered(area: Area2D) -> void:
-	if area.is_in_group("Player"):
+	if area.is_in_group("Player") and Global.saved_people_count < 7:
 		Global.saved_people_count += 1
 		GameEvent.emit_update_collected_people_count()
 		Global.current_points += points_value
 		GameEvent.emit_update_points()
 		SoundManager.play_sound(SAVING_PERSON)
+		point_popup()
 		queue_free()
 	elif area.is_in_group("PlayerBullet"):
 		SoundManager.play_sound(PERSON_DEATH)

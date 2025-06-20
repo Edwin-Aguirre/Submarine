@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://d33sndw4dq6ub"]
+[gd_scene load_steps=26 format=3 uid="uid://d33sndw4dq6ub"]
 
 [ext_resource type="PackedScene" uid="uid://dwsnh074k44bs" path="res://player/player.tscn" id="1_uwrxv"]
 [ext_resource type="PackedScene" uid="uid://byeph3xkhhcwr" path="res://user_interface/people-count/people_count.tscn" id="3_lbhrr"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://cg2otghq3604m" path="res://scenes/game/oxygen_zone.gd" id="3_u5sy4"]
 [ext_resource type="Shader" uid="uid://e55ttlrkdkk0" path="res://scenes/environment/water.gdshader" id="4_gee14"]
 [ext_resource type="Texture2D" uid="uid://5yo1uvp1nlw1" path="res://user_interface/oxygen-bar/oxygen_bar_under.png" id="4_p57ef"]
+[ext_resource type="Texture2D" uid="uid://devuro338cf1t" path="res://scenes/environment/sand_bottom.png" id="5_trtic"]
 [ext_resource type="Texture2D" uid="uid://10bvo2c0qvjd" path="res://user_interface/oxygen-bar/oxygen_bar_progress.png" id="5_u5sy4"]
 [ext_resource type="Script" uid="uid://blvg7tkdfpxmr" path="res://user_interface/oxygen-bar/oxygen_bar.gd" id="6_gee14"]
 [ext_resource type="FontFile" uid="uid://btonjd5feedgb" path="res://user_interface/fonts/font_1.ttf" id="9_0tnpc"]
@@ -124,6 +125,11 @@ material = SubResource("ShaderMaterial_0tnpc")
 position = Vector2(127, 178)
 scale = Vector2(0.7, 1)
 mesh = SubResource("QuadMesh_dinhu")
+
+[node name="Ground" type="Sprite2D" parent="Environment"]
+z_index = 10
+position = Vector2(127, 215)
+texture = ExtResource("5_trtic")
 
 [node name="UI" type="CanvasLayer" parent="."]
 
