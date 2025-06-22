@@ -36,3 +36,4 @@ func activate_game_over() -> void:
 func _on_game_over_delay_timeout() -> void:
 	visible = true
 	SoundManager.play_sound(GAME_OVER)
+	Music.playing(false)

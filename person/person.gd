@@ -59,6 +59,7 @@ func _on_area_entered(area: Area2D) -> void:
 		Global.current_points += points_value
 		GameEvent.emit_update_points()
 		SoundManager.play_sound(SAVING_PERSON)
+		Input.start_joy_vibration(0, 0.25, 0.5, 0.5)
 		point_popup()
 		queue_free()
 	elif area.is_in_group("PlayerBullet"):

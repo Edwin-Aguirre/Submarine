@@ -22,18 +22,32 @@ func _process(_delta: float) -> void:
 	
 	if amount_rounded == 25:
 		alert(1.25, 5)
+		Input.start_joy_vibration(0, 1.0, 1.0, 0.5)
+		Music.change_pitch(1.25)
 	elif amount_rounded == 15:
 		alert(1.3, 7)
+		Input.start_joy_vibration(0, 1.0, 1.0, 0.5)
+		Music.change_pitch(1.3)
 	elif amount_rounded == 10:
 		alert(1.35, 10)
+		Input.start_joy_vibration(0, 1.0, 1.0, 0.5)
+		Music.change_pitch(1.35)
 	elif amount_rounded == 7:
 		alert(1.4, 15)
+		Input.start_joy_vibration(0, 1.0, 1.0, 0.5)
+		Music.change_pitch(1.4)
 	elif amount_rounded == 5:
 		alert(1.5, 20)
+		Input.start_joy_vibration(0, 1.0, 1.0, 0.5)
+		Music.change_pitch(1.5)
 	elif amount_rounded == 2:
 		alert(1.6, 25)
+		Input.start_joy_vibration(0, 1.0, 1.0, 0.5)
+		Music.change_pitch(1.6)
 	elif amount_rounded == 1:
 		alert(1.8, 35)
+		Input.start_joy_vibration(0, 1.0, 1.0, 0.5)
+		Music.change_pitch(1.8)
 	
 	previous_amount = amount_rounded
 

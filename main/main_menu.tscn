@@ -1,0 +1,89 @@
+[gd_scene load_steps=11 format=3 uid="uid://dhudx4041gdx1"]
+
+[ext_resource type="Shader" uid="uid://e55ttlrkdkk0" path="res://scenes/environment/water.gdshader" id="1_w2mlq"]
+[ext_resource type="Texture2D" uid="uid://devuro338cf1t" path="res://scenes/environment/sand_bottom.png" id="2_4u0aa"]
+[ext_resource type="PackedScene" uid="uid://8t6i7awptmbl" path="res://enemies/enemy_spawner/enemy_spawner.tscn" id="3_8cpu2"]
+[ext_resource type="PackedScene" uid="uid://4gtphkt8mc2t" path="res://main/title_menu.tscn" id="4_4u0aa"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_csgli"]
+shader = ExtResource("1_w2mlq")
+shader_parameter/strength = Vector2(2, 2)
+shader_parameter/speed = 1.0
+shader_parameter/seed = 0.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_go4yo"]
+size = Vector2(400, 4)
+subdivide_width = 8
+subdivide_depth = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_guapg"]
+size = Vector2(400, 35)
+subdivide_width = 8
+subdivide_depth = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_ctf8e"]
+size = Vector2(400, 40)
+subdivide_width = 8
+subdivide_depth = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_4fsgo"]
+size = Vector2(400, 75)
+subdivide_width = 8
+subdivide_depth = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_hu631"]
+size = Vector2(400, 75)
+subdivide_width = 8
+subdivide_depth = 1
+
+[node name="MainMenu" type="Node"]
+
+[node name="Environment" type="Node2D" parent="."]
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Environment"]
+material = SubResource("ShaderMaterial_csgli")
+position = Vector2(127, 39)
+scale = Vector2(0.7, 1)
+mesh = SubResource("QuadMesh_go4yo")
+
+[node name="MeshInstance2D2" type="MeshInstance2D" parent="Environment"]
+modulate = Color(0.0470588, 0.901961, 0.94902, 1)
+z_index = -10
+material = SubResource("ShaderMaterial_csgli")
+position = Vector2(127, 55)
+scale = Vector2(0.7, 1)
+mesh = SubResource("QuadMesh_guapg")
+
+[node name="MeshInstance2D3" type="MeshInstance2D" parent="Environment"]
+modulate = Color(0, 0.596078, 0.858824, 1)
+z_index = -10
+material = SubResource("ShaderMaterial_csgli")
+position = Vector2(127, 65)
+scale = Vector2(0.7, 1)
+mesh = SubResource("QuadMesh_ctf8e")
+
+[node name="MeshInstance2D4" type="MeshInstance2D" parent="Environment"]
+modulate = Color(0.117647, 0.341176, 0.611765, 1)
+z_index = -12
+material = SubResource("ShaderMaterial_csgli")
+position = Vector2(127, 107)
+scale = Vector2(0.7, 1)
+mesh = SubResource("QuadMesh_4fsgo")
+
+[node name="MeshInstance2D5" type="MeshInstance2D" parent="Environment"]
+modulate = Color(0.12549, 0.207843, 0.384314, 1)
+z_index = -13
+material = SubResource("ShaderMaterial_csgli")
+position = Vector2(127, 178)
+scale = Vector2(0.7, 1)
+mesh = SubResource("QuadMesh_hu631")
+
+[node name="Ground" type="Sprite2D" parent="Environment"]
+z_index = 10
+position = Vector2(127, 215)
+texture = ExtResource("2_4u0aa")
+
+[node name="EnemySpawner" parent="." instance=ExtResource("3_8cpu2")]
+
+[node name="TitleMenu" parent="." instance=ExtResource("4_4u0aa")]
+z_index = 20

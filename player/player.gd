@@ -36,12 +36,15 @@ enum states {DEFAULT, PAUSED, OXYGEN_REFUEL, PEOPLE_REFUEL}
 @onready var reload_timer: Timer = $ReloadTimer
 @onready var player_sprite: AnimatedSprite2D = $PlayerSprite
 @onready var decrease_people_timer: Timer = $DecreasePeopleTimer
+@onready var bubble_particles: CPUParticles2D = $BubbleParticles
 
 
 func _ready() -> void:
 	GameEvent.full_crew_oxygen_refuel.connect(full_crew_oxygen_refuel)
 	GameEvent.less_people_oxygen_refuel.connect(less_people_oxygen_refuel)
 	GameEvent.game_over.connect(game_over)
+	Music.playing(true)
+	Music.change_pitch(1)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -77,8 +80,12 @@ func flip_player_direction() -> void:
 	
 	if velocity.x > 0:
 		player_sprite.flip_h = false
+		bubble_particles.gravity.x = -50
+		bubble_particles.position.x = -15
 	elif velocity.x < 0:
 		player_sprite.flip_h = true
+		bubble_particles.gravity.x = 50
+		bubble_particles.position.x = 15
 
 
 func rotate_movement(delta: float) -> void:
@@ -106,6 +113,7 @@ func shooting() -> void:
 		get_tree().current_scene.add_child(bullet_instance)
 		
 		SoundManager.play_sound(PLAYER_SHOOT)
+		Input.start_joy_vibration(0, 0.25, 0.5, 0)
 		
 		if player_sprite.flip_h :
 			bullet_instance.flip_bullet_direction()
@@ -134,6 +142,7 @@ func lose_oxygen(delta: float) -> void:
 
 func oxygen_refuel(delta: float) -> void:
 	Global.oxygen_level += OXYGEN_INCREASE_SPEED * delta
+	Music.reset_pitch()
 	
 	if Global.oxygen_level > 99:
 		state = states.DEFAULT
@@ -148,7 +157,7 @@ func death_oxygen_empty() -> void:
 
 
 func death_oxygen_full_refuel() -> void:
-	if Global.oxygen_level > 80:
+	if Global.oxygen_level > 80 and Global.saved_people_count < 7:
 		death()
 
 
@@ -180,6 +189,7 @@ func death() -> void:
 	GameEvent.emit_pause_enemies(true)
 	SoundManager.play_sound(PLAYER_DEATH)
 	player_death_pieces()
+	Input.start_joy_vibration(0, 0.5, 1.0, 0.5)
 
 
 func player_death_pieces() -> void:
@@ -200,6 +210,7 @@ func game_over() -> void:
 
 func _on_reload_timer_timeout() -> void:
 	can_shoot = true
+	Input.stop_joy_vibration(0)
 
 
 func _on_decrease_people_timer_timeout() -> void:
